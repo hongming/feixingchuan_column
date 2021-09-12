@@ -1,3 +1,13 @@
+/*
+E4040铝型材
+70厘米4根
+133+4*40，取30厘米，2根
+133+2*40，取22厘米，2根
+133，取13厘米，4根
+
+
+*/
+
 //CPC Pier adapter
 
 include <NopSCADlib/utils/core/core.scad>
@@ -30,61 +40,75 @@ module column(){
     
     AL120x120x5 =  ["AL120x120x5",  "Aluminium rectangular box section 12mm x 8mm x 1mm",     [122.5, 122.5],  5.25, 0.5, silver, undef];
 
-translate([0,0,-230-10-10-5]){
-    box_section(AL140x140x5, 460);
+translate([0,0,-210-10-10-5]){
+
 //    translate([0,0,10]){
 //box_section(AL130x130x5, 460);}
     translate([0,0,20]){
-box_section(AL120x120x5, 460);  
+box_section(AL120x120x5, 420);  
+
+
         }
+            box_section(AL140x140x5, 420);
+
+
     
     }
+
+translate([0,0,-420-10-10-5-2.5]){
+                cube([200,200,5],center=true);}
 
     }
 
 
 module main(){
 
-//CPC支架
-translate([0,0,40]){
+//CPC
+translate([0,0,45]){
+    color("red")
+
+cylinder(h =7 ,d1=300,d2=340,center=true,$fn=400);
+}
+translate([0,0,38.5]){
     color("black")
 difference(){
-cylinder(h =10 ,d=205,center=true);
+cylinder(h =7 ,d1=250,d2=270,center=true,$fn=400);
 for(i = [0,120,240]){
 rotate(i)
 translate([82,0,0]){
 cylinder(h =60 ,d=10,center=true);} 
 }}}
+
  
 
 //CPC连接件
 translate([0,0,30]){
   difference(){
-cube([210,210,10],center=true);
+cube([260,260,10],center=true);
   for(i = [0,120,240]){
 rotate(i)
 translate([82,0,0]){
 cylinder(h =60 ,d=10,center=true);} 
 }
 
-//
-translate([85,85]){
+
+translate([95,95]){
 cylinder(h=200,r=5,center=true);}
 
-translate([85,-85]){
+translate([95,-95]){
 cylinder(h=200,r=5,center=true);}
 
-translate([-85,85]){
+translate([-95,95]){
 cylinder(h=200,r=5,center=true);}
 
-translate([-85,-85]){
+translate([-95,-95]){
 cylinder(h=200,r=5,center=true);}    
       }
     }
     
     
 //4角的螺杆
-for(i=[[85,85],[85,-85],[-85,85],[-85,-85]])    {
+for(i=[[105,105],[105,-105],[-105,105],[-105,-105]])    {
 translate(i){
     translate([0,0,45]){
 luosi();}}
@@ -94,7 +118,7 @@ luosi();}}
 //立柱连接件
 translate([0,0,0]){
   difference(){
-cube([210,210,10],center=true);
+cube([260,260,10],center=true);
   for(i = [0,120,240]){
 rotate(i)
 translate([82,0,0]){
@@ -135,8 +159,9 @@ cylinder(h=200,r=3,center=true);}
 
 module column_box(){
  
-    translate([0,0,0]){
-extrusion(E4040,133+2*40,center=false); 
+    translate([0,0,-40]){
+        color("yellow")
+extrusion(E4040,133+2*40+2*40,center=false); 
         } 
     translate([-133-40,0,0]){
 extrusion(E4040,133+2*40,center=false); 
@@ -157,63 +182,79 @@ extrusion(E4040,133,center=false);
 
 
 
-//下面立柱-最粗第一节-最上方抱箍
+//下面立柱-最粗第一节-上方抱箍
 translate([133/2+20,133/2+40,-40-20]){
 rotate([90,0,0]){
-
-    color("blue")
 column_box();
     }
 }
+
+//下面立柱-最粗第一节-下方抱箍
+translate([133/2+20,133/2+40,-40-20-420+60]){
+rotate([90,0,0]){
+column_box();
+    }
+}
+
 //斜拉桥
-    for(i=[
-    [0,0,0],
-        [0,0,90],
-        [0,0,180],
-        [0,0,270]
-    ]){
-        rotate(i){
-    translate([460+80+40*sin(45),0,-440-90*sin(45)]){
-    rotate([0,-45,0]){
-extrusion(E4040,600,center=false,cornerHole = false);
-    }}}
-    
-//活动铰链
-            rotate(i){
-translate([-133/2-40,0,-20-30-30]){
- 
-    pivot_joints();
-       //     pivot_joint();
-    }}
-    
-//活动铰链-底部
-            rotate(i){
-translate([-133/2-40-400-70,0,-500-20-30]){
- 
-    rotate([0,90,180]){
-    pivot_joints();}
-    translate([-20,0,-24])
-    pivot_joint_foot();
-       //     pivot_joint();
-    }}
-//斜拉桥的花篮紧缩器
-        rotate(i){
-    translate([460+90+10,-5,-460-40]){
-    rotate([0,-90,0]){
-cube([5,5,460*sqrt(2)]);
-    }}
-
-
-
-    
+rotate([0, 0, 0]) {
+for (i = [
+           [0, 0, 0],
+           [0, 0, 90],
+           [0, 0, 180],
+           [0, 0, 270]
+         ]) {
+  rotate(i) {
+    translate([460 + 80 + 40 * sin(45), 0, -440 - 90 * sin(45)]) {
+      rotate([0, -45, 0]) {
+        extrusion(E4040, 600, center = false, cornerHole = false);
+      }
     }
+  }
+
+  //活动铰链
+  rotate(i) {
+    translate([-133 / 2 - 40, 0, -20 - 30 - 30]) {
+
+      pivot_joints();
+      //     pivot_joint();
     }
+  }
+
+  //活动铰链-底部
+  rotate(i) {
+    translate([-133 / 2 - 40 - 400 - 70, 0, -500 - 20 - 30]) {
+
+      rotate([0, 90, 180]) {
+        pivot_joints();
+      }
+      translate([-20, 0, -24])
+      pivot_joint_foot();
+      //     pivot_joint();
+    }
+  }
+  //斜拉桥的花篮紧缩器
+  rotate(i) {
+    translate([0, -2.5, -420 - 40]) {
+      rotate([0, -90, 0]) {
+        cube([5, 5, 700]);
+      }
+    }
+
+
+
+
+  }
+}
+}
+
+
     
     
 //螺杆套装
 module luosi(){
-translate([0,0,-5]){
-    cylinder(h=10,r=10,center=true);
+translate([0,0,-7]){
+    cylinder(h=7,r=10,center=true);
 
 translate([0,0,-10-50/2]){
     cylinder(h=10+50,r=5,center=true);
@@ -281,9 +322,9 @@ cylinder(h=60,d=10,center=true);
         }
 //脚杯
 module pivot_joint_foot(){
-    cylinder(h=12,d=90,center=false);
+    cylinder(h=12,d=50,center=false);
 translate([0,0,12]){
-    cylinder(h=12,d1=90,d2=10,center=false);
+    cylinder(h=12,d1=50,d2=10,center=false);
     }
 cylinder(h=80,d=8,center=false);
     }
