@@ -8,6 +8,7 @@ E4040铝型材
 
 */
 
+
 //CPC Pier adapter
 
 include <NopSCADlib/utils/core/core.scad>
@@ -15,7 +16,13 @@ use <NopSCADlib/utils/layout.scad>
 include <NopSCADlib/vitamins/box_sections.scad>
 include <NopSCADlib/vitamins/nuts.scad>
 include <NopSCADlib/vitamins/extrusions.scad>
+include <NopSCADlib/vitamins/washers.scad>
 use <parts_pivot_joints.scad>
+use <luosi.scad>
+
+AL140x140x5 =  ["AL140x140x5",  "Aluminium rectangular box section 12mm x 8mm x 1mm",     [133, 133],  5.25, 0.5, silver, undef];
+AL130x130x5 =  ["AL130x130x5",  "Aluminium rectangular box section 12mm x 8mm x 1mm",     [130, 130],  5, 0.5, silver, undef];
+AL120x120x5 =  ["AL120x120x5",  "Aluminium rectangular box section 12mm x 8mm x 1mm",     [122.5, 122.5],  5.25, 0.5, silver, undef];
 
 //手拧螺丝
 module apapter_wingnut(){
@@ -27,61 +34,49 @@ wingnut(M4_wingnut);}}
  
 if($preview)
 {
- 
-main();
-  column();
-
-}
-
-module column(){
-    AL140x140x5 =  ["AL140x140x5",  "Aluminium rectangular box section 12mm x 8mm x 1mm",     [133, 133],  5.25, 0.5, silver, undef];
-    
-    AL130x130x5 =  ["AL130x130x5",  "Aluminium rectangular box section 12mm x 8mm x 1mm",     [130, 130],  5, 0.5, silver, undef];
-    
-    AL120x120x5 =  ["AL120x120x5",  "Aluminium rectangular box section 12mm x 8mm x 1mm",     [122.5, 122.5],  5.25, 0.5, silver, undef];
-
-translate([0,0,-210-10-10-5]){
-
-//    translate([0,0,10]){
-//box_section(AL130x130x5, 460);}
-    translate([0,0,20]){
-box_section(AL120x120x5, 420);  
-
+      translate([0,0,10]){   
+main();}
+  column_A();
+translate([0,0,-20
+    //动画
+//    +$t*300    
+    ]){
+    column_B();
 
         }
+     translate([0,0,-20]){   
+ rotate([0,0,20])
+         telescope_connetor();
+}
+}
+
+
+//立柱-外面一层
+module column_A(){
+translate([0,0,-210-10-10-5]){
             box_section(AL140x140x5, 420);
-
-
-    
     }
 
 translate([0,0,-420-10-10-5-2.5]){
-                cube([200,200,5],center=true);}
+    cube([200,200,5],center=true);
+    }
+    }
+    
+//立柱-里面一层 +连接件
+module column_B(){
+translate([0,0,-210-10-10-5]){
+    translate([0,0,20]){
+box_section(AL120x120x5, 420);  
+        }
+    }
+    
 
     }
 
-
-module main(){
-
-//CPC
-translate([0,0,45]){
-    color("red")
-
-cylinder(h =7 ,d1=300,d2=340,center=true,$fn=400);
-}
-translate([0,0,38.5]){
-    color("black")
-difference(){
-cylinder(h =7 ,d1=250,d2=270,center=true,$fn=400);
-for(i = [0,120,240]){
-rotate(i)
-translate([82,0,0]){
-cylinder(h =60 ,d=10,center=true);} 
-}}}
-
+module telescope_connetor(){
+    
  
-
-//CPC连接件
+//连接件-CPC连接件
 translate([0,0,30]){
   difference(){
 cube([260,260,10],center=true);
@@ -92,30 +87,59 @@ cylinder(h =60 ,d=10,center=true);}
 }
 
 
-translate([95,95]){
+translate([105,105]){
 cylinder(h=200,r=5,center=true);}
 
-translate([95,-95]){
+translate([105,-105]){
 cylinder(h=200,r=5,center=true);}
 
-translate([-95,95]){
+translate([-105,105]){
 cylinder(h=200,r=5,center=true);}
 
-translate([-95,-95]){
-cylinder(h=200,r=5,center=true);}    
+translate([-105,-105]){
+cylinder(h=200,r=5,center=true);}   
+
+//连接件-连接底部立柱-四个孔-不旋转
+rotate([0,0,0]){
+translate([51,51]){
+cylinder(h=200,r=3,center=true);}
+
+translate([51,-51]){
+cylinder(h=200,r=3,center=true);}
+
+translate([-51,51]){
+cylinder(h=200,r=3,center=true);}
+
+translate([-51,-51]){
+cylinder(h=200,r=3,center=true);}
+      }
+      
+//连接件-连接底部立柱-四个孔
+rotate([0,0,-20]){
+translate([51,51]){
+cylinder(h=200,r=3,center=true);}
+
+translate([51,-51]){
+cylinder(h=200,r=3,center=true);}
+
+translate([-51,51]){
+cylinder(h=200,r=3,center=true);}
+
+translate([-51,-51]){
+cylinder(h=200,r=3,center=true);}
+      }
       }
     }
     
     
-//4角的螺杆
+//连接件-4角的螺杆
 for(i=[[105,105],[105,-105],[-105,105],[-105,-105]])    {
 translate(i){
     translate([0,0,45]){
 luosi();}}
 
     }
-
-//立柱连接件
+//连接件-立柱连接件
 translate([0,0,0]){
   difference(){
 cube([260,260,10],center=true);
@@ -124,7 +148,7 @@ rotate(i)
 translate([82,0,0]){
 cylinder(h =60 ,d=10,center=true);} 
 }
-//两个连接件的孔
+//连接件-两个连接件的孔
 translate([85,85]){
 cylinder(h=200,r=5,center=true);}
 
@@ -136,9 +160,8 @@ cylinder(h=200,r=5,center=true);}
 
 translate([-85,-85]){
 cylinder(h=200,r=5,center=true);}
- //连接底部立柱
 
-
+//连接件-连接底部立柱
 translate([51,51]){
 cylinder(h=200,r=3,center=true);}
 
@@ -152,16 +175,36 @@ translate([-51,-51]){
 cylinder(h=200,r=3,center=true);}
       }
     }
+    }
+
+module main(){
+
+//CPC
+//translate([0,0,45]){
+//    color("red")
+//
+//cylinder(h =7 ,d1=300,d2=340,center=true,$fn=400);
+//}
+//translate([0,0,38.5]){
+//    color("black")
+//difference(){
+//cylinder(h =7 ,d1=250,d2=270,center=true,$fn=400);
+//for(i = [0,120,240]){
+//rotate(i)
+//translate([82,0,0]){
+//cylinder(h =60 ,d=10,center=true);} 
+//}}}
+
+ 
+
     
-
-
+ 
 //新抱箍(立柱是133毫米，为了加工方便按130毫米计算)
 
 module column_box(){
  
-    translate([0,0,-40]){
-        color("yellow")
-extrusion(E4040,133+2*40+2*40,center=false); 
+    translate([0,0,0]){
+extrusion(E4040,133+2*40,center=false); 
         } 
     translate([-133-40,0,0]){
 extrusion(E4040,133+2*40,center=false); 
@@ -235,7 +278,7 @@ for (i = [
   }
   //斜拉桥的花篮紧缩器
   rotate(i) {
-    translate([0, -2.5, -420 - 40]) {
+    translate([0, -2.5, -420]) {
       rotate([0, -90, 0]) {
         cube([5, 5, 700]);
       }
@@ -251,36 +294,7 @@ for (i = [
 
     
     
-//螺杆套装
-module luosi(){
-translate([0,0,-7]){
-    cylinder(h=7,r=10,center=true);
 
-translate([0,0,-10-50/2]){
-    cylinder(h=10+50,r=5,center=true);
-    }
-    
-translate([0,0,-10-3-5]){
-    color("black")
-    cylinder(h=6,r=10,center=true);
-    }
-
-translate([0,0,-30]){
-    color("black")
-    cylinder(h=10,r=10,center=true);
-    }
-    
- 
-     translate([0,0,-50]){
-    color("black")
- //   cylinder(h=10,r=20,center=true);
-           apapter_wingnut(); 
-    }
-   
-    
-    }
-
-}
 
  }
  
